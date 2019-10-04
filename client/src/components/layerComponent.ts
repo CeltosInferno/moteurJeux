@@ -16,12 +16,23 @@ export class LayerComponent extends Component<object> implements IDisplayCompone
   // La méthode *display* est appelée une fois par itération
   // de la boucle de jeu.
   public display(dT: number) {
+    GL = GraphicsAPI.context;
+
     const layerSprites = this.listSprites();
     if (layerSprites.length === 0) {
       return;
     }
     const spriteSheet = layerSprites[0].spriteSheet;
+    for (let sprite of layerSprites) {
+      GL.bindBuffer(GL.ARRAY_BUFFER, sprite.vertexBuffer);
+      GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, sprite.indexBuffer);
+      sprite.spriteSheet.bind();
+    }
     GL.drawElements(GL.TRIANGLES, 6, GL.UNSIGNED_SHORT, 0);
+    for (let sprite of layerSprites) {
+      sprite.spriteSheet.unbind();
+    }
+
 
     
   }
@@ -31,7 +42,6 @@ export class LayerComponent extends Component<object> implements IDisplayCompone
   // des sprites de l'objet courant et de ses enfants.
   private listSprites() {
     const sprites: SpriteComponent[] = [];
-
     const queue: IEntity[] = [this.owner];
     while (queue.length > 0) {
       const node = queue.shift() as IEntity;

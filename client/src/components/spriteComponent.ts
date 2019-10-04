@@ -1,5 +1,4 @@
 import * as GraphicsAPI from "../graphicsAPI";
-import { IDisplayComponent } from "../systems/displaySystem";
 import { ILogicComponent } from "../systems/logicSystem";
 import { Timing } from "../timing";
 import { Component } from "./component";
@@ -20,7 +19,7 @@ interface ISpriteComponentDesc {
   animWait?: number;
 }
 
-export class SpriteComponent extends Component<ISpriteComponentDesc> implements ILogicComponent, IDisplayComponent {
+export class SpriteComponent extends Component<ISpriteComponentDesc> implements ILogicComponent {
   public spriteSheet!: SpriteSheetComponent;
   public spriteName!: string;
   public animationEndedEvent: Array<() => void> = [];
@@ -31,9 +30,9 @@ export class SpriteComponent extends Component<ISpriteComponentDesc> implements 
   private animWaitCounter!: number;
   private descr!: IFrameEntry;
   private spriteSize!: ISize;
-  private vertexBuffer!: WebGLBuffer;
+  public vertexBuffer!: WebGLBuffer;
   private vertices!: Float32Array;
-  private indexBuffer!: WebGLBuffer;
+  public indexBuffer!: WebGLBuffer;
 
   // ## Méthode *create*
   // Cette méthode est appelée pour configurer le composant avant
@@ -105,13 +104,14 @@ export class SpriteComponent extends Component<ISpriteComponentDesc> implements 
   // La méthode *display* choisit le shader et la texture appropriée
   // via la méthode *bind* de la feuille de sprite, sélectionne le
   // tableau de vertices et d'indices et fait l'appel de rendu.
-  public display() {
+  /*public display() {
     GL.bindBuffer(GL.ARRAY_BUFFER, this.vertexBuffer);
     GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
     this.spriteSheet.bind();
     GL.drawElements(GL.TRIANGLES, 6, GL.UNSIGNED_SHORT, 0);
     this.spriteSheet.unbind();
-  }
+
+  }*/
 
   // ## Méthode *updateMesh*
   // Cette méthode met à jour les informations relatives à la sprite
