@@ -30,9 +30,7 @@ export class SpriteComponent extends Component<ISpriteComponentDesc> implements 
   private animWaitCounter!: number;
   private descr!: IFrameEntry;
   private spriteSize!: ISize;
-  public vertexBuffer!: WebGLBuffer;
-  private vertices!: Float32Array;
-  public indexBuffer!: WebGLBuffer;
+  public vertices!: Float32Array;
 
   // ## Méthode *create*
   // Cette méthode est appelée pour configurer le composant avant
@@ -56,30 +54,7 @@ export class SpriteComponent extends Component<ISpriteComponentDesc> implements 
     // On récupère ici la feuille de sprite correspondant à ce composant.
     this.spriteSheet = Component.findComponent<SpriteSheetComponent>(descr.spriteSheet)!;
 
-    // On crée ici un tableau de 4 vertices permettant de représenter
-    // le rectangle à afficher.
-    this.vertexBuffer = GL.createBuffer()!;
-    GL.bindBuffer(GL.ARRAY_BUFFER, this.vertexBuffer);
     this.vertices = new Float32Array(4 * TextureComponent.vertexSize);
-    GL.bufferData(GL.ARRAY_BUFFER, this.vertices, GL.DYNAMIC_DRAW);
-
-    // On crée ici un tableau de 6 indices, soit 2 triangles, pour
-    // représenter quels vertices participent à chaque triangle:
-    // ```
-    // 0    1
-    // +----+
-    // |\   |
-    // | \  |
-    // |  \ |
-    // |   \|
-    // +----+
-    // 3    2
-    // ```
-    this.indexBuffer = GL.createBuffer()!;
-    GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-    const indices = new Uint16Array([0, 1, 2, 2, 3, 0]);
-    GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, indices, GL.DYNAMIC_DRAW);
-
     // Et on initialise le contenu des vertices
     this.updateMesh();
   }
@@ -174,7 +149,5 @@ export class SpriteComponent extends Component<ISpriteComponentDesc> implements 
 
     const offset = 0;
     this.vertices.set(v, offset);
-    GL.bindBuffer(GL.ARRAY_BUFFER, this.vertexBuffer);
-    GL.bufferSubData(GL.ARRAY_BUFFER, offset, this.vertices);
   }
 }
