@@ -42,20 +42,23 @@ export class PhysicSystem implements ISystem {
           continue;
         }
 
-		//si les deux rectangles englobants sont en collision
-        if (c1.area.intersectsWith(c2.area)) {
-			//on ajoute c1 et c2 à la liste des collisions à traiter
-          collisions.push([c1, c2]);
+        //Si c'est nécessaire de vérifier si les objets sont en collisions
+        if(((c1.mask & c2.flag) || (c2.mask & c1.flag) ) ){
+          //si les deux rectangles englobants sont en collision
+          if (c1.area.intersectsWith(c2.area)) {
+        //on ajoute c1 et c2 à la liste des collisions à traiter
+            collisions.push([c1, c2]);
+          }
         }
       }
     }
 
 	//Pour toutes les collisions à traiter, on exécute les handler s'ils existent
     for (const [c1, c2] of collisions) {
-      if ((c1.mask & c2.flag) && c1.handler) {
+      if (c1.handler) {
         c1.handler.onCollision(c2);
       }
-      if ((c2.mask & c1.flag) && c2.handler) {
+      if (c2.handler) {
         c2.handler.onCollision(c1);
       }
     }
