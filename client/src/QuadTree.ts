@@ -2,7 +2,7 @@ import { Rectangle } from "./Rectangle";
 import {ColliderComponent} from './components/colliderComponent';
 import QuadTreeNode from './QuadTreeNode';
 
-class QuadTree {
+export class QuadTree {
     public root: QuadTreeNode;
 
     constructor(bounds: Rectangle, maxDepth: number, maxChildren: number) {
@@ -33,5 +33,3 @@ class QuadTree {
         }
     }
 }
-
-export default QuadTree;

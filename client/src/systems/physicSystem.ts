@@ -1,10 +1,13 @@
 import { ColliderComponent } from "../components/colliderComponent";
 import { Scene } from "../scene";
 import { ISystem } from "./system";
+import {QuadTree} from "../QuadTree"
+import Rectangle from "../Rectangle";
 
 // # Classe *PhysicSystem*
 // Représente le système permettant de détecter les collisions
 export class PhysicSystem implements ISystem {
+  private _quadTree : QuadTree = new QuadTree(new Rectangle(105,20,148,108),100,4);
   // Méthode *iterate*
   // Appelée à chaque tour de la boucle de jeu
   public iterate(dT: number) {
@@ -23,6 +26,10 @@ export class PhysicSystem implements ISystem {
       }
     }
 
+    
+    this._quadTree.clear();
+    this._quadTree.insert(colliders);
+
 	//soit la liste des collisions que l'on souhaite traiter
     const collisions: Array<[ColliderComponent, ColliderComponent]> = [];
 
@@ -33,10 +40,13 @@ export class PhysicSystem implements ISystem {
       if (!c1.enabled || !c1.owner.active) {
         continue;
       }
-
+      
+    const itemList : ColliderComponent[] = this._quadTree.retrieve(c1) as ColliderComponent[];
+        
 	  //pour tous les objets avec lesquels c1 est susceptible d'avoir une collision non traitée
-      for (let j = i + 1; j < colliders.length; j++) {
-        const c2 = colliders[j];
+      for (let j = 0; j < itemList.length; j++) {
+        //on vérifie dans le quadtree
+        const c2 = itemList[j];
 		//si le collider n'est pas activé ou si le parent n'est pas activé
         if (!c2.enabled || !c2.owner.active) {
           continue;
