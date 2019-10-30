@@ -136,7 +136,7 @@ export class PlayerComponent extends Component<IPlayerComponentDesc> implements 
     if (rupee) {
       this.score.value += rupee.value;
       obj.active = false;
-      //obj.parent!.removeChild(obj);
+      obj.parent!.removeChild(obj);
     }
     if (heart) {
       this.life.value += heart.heal;
