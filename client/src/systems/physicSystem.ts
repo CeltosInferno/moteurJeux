@@ -3,6 +3,7 @@ import { Scene } from "../scene";
 import { ISystem } from "./system";
 import {QuadTree} from "../QuadTree"
 import Rectangle from "../Rectangle";
+import { DebugDrawCallsComponent } from "../components/debugDrawCallsComponent";
 
 // # Classe *PhysicSystem*
 // Représente le système permettant de détecter les collisions
@@ -41,8 +42,9 @@ export class PhysicSystem implements ISystem {
         continue;
       }
       
+      //on récupère tous les items dans le même quartier que c1
     const itemList : ColliderComponent[] = this._quadTree.retrieve(c1) as ColliderComponent[];
-        
+    
 	  //pour tous les objets avec lesquels c1 est susceptible d'avoir une collision non traitée
       for (let j = 0; j < itemList.length; j++) {
         //on vérifie dans le quadtree
@@ -55,7 +57,7 @@ export class PhysicSystem implements ISystem {
         //Si c'est nécessaire de vérifier si les objets sont en collisions
         if(((c1.mask & c2.flag) || (c2.mask & c1.flag) ) ){
           //si les deux rectangles englobants sont en collision
-          if (c1.area.intersectsWith(c2.area)) {
+          if (c1.area.intersectsWith(c2.area)) {    
         //on ajoute c1 et c2 à la liste des collisions à traiter
             collisions.push([c1, c2]);
           }
