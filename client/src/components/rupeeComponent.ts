@@ -2,6 +2,8 @@ import { ILogicComponent } from "../systems/logicSystem";
 import { Timing } from "../timing";
 import { Component } from "./component";
 import { SpriteComponent } from "./spriteComponent";
+import { AudioComponent } from "./audioComponent";
+
 
 // # Classe *RupeeComponent*
 // Cette classe comprend les informations d'un rubis.
@@ -46,6 +48,8 @@ export class RupeeComponent extends Component<IRupeeComponentDesc> implements IL
     const sprite = this.owner.getComponent<SpriteComponent>("Sprite")!;
     sprite.spriteName = this.type;
     this.start = (new Date()).getTime();
+    AudioComponent.play("rupee_drop");
+
   }
 
   // ## Méthode *update*
