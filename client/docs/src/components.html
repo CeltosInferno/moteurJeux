@@ -30,6 +30,11 @@
                 </a>
               
                 
+                <a class="source" href="components/audioComponent.html">
+                      src/components/audioComponent.ts
+                </a>
+              
+                
                 <a class="source" href="components/backgroundLoaderComponent.html">
                       src/components/backgroundLoaderComponent.ts
                 </a>
@@ -185,6 +190,11 @@
                 </a>
               
                 
+                <a class="source" href="localisation.html">
+                      src/localisation.ts
+                </a>
+              
+                
                 <a class="source" href="main.html">
                       src/main.ts
                 </a>
@@ -247,7 +257,8 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { BackgroundLoaderComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">"./components/backgroundLoaderComponent"</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { AudioComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">"./components/audioComponent"</span>;
+<span class="hljs-keyword">import</span> { BackgroundLoaderComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">"./components/backgroundLoaderComponent"</span>;
 <span class="hljs-keyword">import</span> { CameraComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">"./components/cameraComponent"</span>;
 <span class="hljs-keyword">import</span> { ChickenComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">"./components/chickenComponent"</span>;
 <span class="hljs-keyword">import</span> { ChickenSpawnerComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">"./components/chickenSpawnerComponent"</span>;
@@ -311,6 +322,7 @@ composants correspondants.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> componentCreators: IComponentCreators = {
+    Audio: AudioComponent,
     BackgroundLoader: BackgroundLoaderComponent,
     Camera: CameraComponent,
     Chicken: ChickenComponent,

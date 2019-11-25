@@ -1,3 +1,9 @@
+#config {
+  float: left;
+  width: 768px;
+  height: 576px;
+}
+
 #canvas {
   border: 1px solid black;
   float: left;

@@ -30,6 +30,11 @@
                 </a>
               
                 
+                <a class="source" href="audioComponent.html">
+                      src/components/audioComponent.ts
+                </a>
+              
+                
                 <a class="source" href="backgroundLoaderComponent.html">
                       src/components/backgroundLoaderComponent.ts
                 </a>
@@ -185,6 +190,11 @@
                 </a>
               
                 
+                <a class="source" href="../localisation.html">
+                      src/localisation.ts
+                </a>
+              
+                
                 <a class="source" href="../main.html">
                       src/main.ts
                 </a>
@@ -249,9 +259,11 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { IEntity } <span class="hljs-keyword">from</span> <span class="hljs-string">"../entity"</span>;
 <span class="hljs-keyword">import</span> { EventTrigger } <span class="hljs-keyword">from</span> <span class="hljs-string">"../eventTrigger"</span>;
+<span class="hljs-keyword">import</span> { Localisation } <span class="hljs-keyword">from</span> <span class="hljs-string">"../localisation"</span>;
 <span class="hljs-keyword">import</span> { IEntityDesc, Scene } <span class="hljs-keyword">from</span> <span class="hljs-string">"../scene"</span>;
 <span class="hljs-keyword">import</span> { ILogicComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">"../systems/logicSystem"</span>;
 <span class="hljs-keyword">import</span> { Timing } <span class="hljs-keyword">from</span> <span class="hljs-string">"../timing"</span>;
+<span class="hljs-keyword">import</span> { AudioComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">"./audioComponent"</span>;
 <span class="hljs-keyword">import</span> { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">"./component"</span>;</pre></div></div>
             
         </li>
@@ -304,7 +316,10 @@ que tous les composants d’un objet aient été créés.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> create(descr: ICountdownComponentDesc) {
-    <span class="hljs-keyword">this</span>.sprites = descr.sprites;
+    <span class="hljs-keyword">this</span>.sprites = [];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> s of descr.sprites) {
+      <span class="hljs-keyword">this</span>.sprites.push(Localisation.get(s));
+    }
     <span class="hljs-keyword">this</span>.delay = descr.delay;
     <span class="hljs-keyword">this</span>.spriteTemplate = descr.spriteTemplate;
   }</pre></div></div>
@@ -381,8 +396,7 @@ a encore à afficher.</p>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">private</span> showImage() {
     <span class="hljs-keyword">this</span>.shownTime = (<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()).getTime();
-    <span class="hljs-keyword">this</span>.showNamedImage(<span class="hljs-keyword">this</span>.sprites[<span class="hljs-keyword">this</span>.index]);
-  }</pre></div></div>
+    <span class="hljs-keyword">this</span>.showNamedImage(<span class="hljs-keyword">this</span>.sprites[<span class="hljs-keyword">this</span>.index]);</pre></div></div>
             
         </li>
         
@@ -392,6 +406,22 @@ a encore à afficher.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h1 id="joue-le-son-de-d-compte-audio">Joue le son de décompte audio</h1>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    AudioComponent.play(<span class="hljs-string">"countdown"</span>);
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <h2 id="m-thode-shownamedimage-">Méthode <em>showNamedImage</em></h2>
 <p>Affiche une image, directement à partir de son nom</p>

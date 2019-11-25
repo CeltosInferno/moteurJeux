@@ -1,4 +1,5 @@
 import { EventTrigger } from "../eventTrigger";
+import { Localisation } from "../localisation";
 import { Component } from "./component";
 import { PlayerComponent } from "./playerComponent";
 
@@ -66,6 +67,10 @@ export class RefereeComponent extends Component<IRefereeComponentDesc> {
   // ## Méthode *showWinMessage*
   // Affiche un popup mentionnant le gagnant
   private showWinMessage(winner: PlayerComponent, loser: PlayerComponent) {
-    alert(`${winner.name} a gagné contre ${loser.name}`);
+    const message = Localisation.get("winMessage", {
+      LOSER: loser.name,
+      WINNER: winner.name,
+    });
+    alert(message);
   }
 }

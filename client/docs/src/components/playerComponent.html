@@ -30,6 +30,11 @@
                 </a>
               
                 
+                <a class="source" href="audioComponent.html">
+                      src/components/audioComponent.ts
+                </a>
+              
+                
                 <a class="source" href="backgroundLoaderComponent.html">
                       src/components/backgroundLoaderComponent.ts
                 </a>
@@ -185,6 +190,11 @@
                 </a>
               
                 
+                <a class="source" href="../localisation.html">
+                      src/localisation.ts
+                </a>
+              
+                
                 <a class="source" href="../main.html">
                       src/main.ts
                 </a>
@@ -249,6 +259,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { vec3 } <span class="hljs-keyword">from</span> <span class="hljs-string">"gl-matrix"</span>;
 <span class="hljs-keyword">import</span> { EventTrigger } <span class="hljs-keyword">from</span> <span class="hljs-string">"../eventTrigger"</span>;
+<span class="hljs-keyword">import</span> { Localisation } <span class="hljs-keyword">from</span> <span class="hljs-string">"../localisation"</span>;
 <span class="hljs-keyword">import</span> { ILogicComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">"../systems/logicSystem"</span>;
 <span class="hljs-keyword">import</span> { Timing } <span class="hljs-keyword">from</span> <span class="hljs-string">"../timing"</span>;
 <span class="hljs-keyword">import</span> { ChickenComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">"./chickenComponent"</span>;
@@ -334,7 +345,7 @@ que tous les composants d’un objet aient été créés.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">public</span> create(descr: IPlayerComponentDesc) {
-    <span class="hljs-keyword">this</span>.name = descr.name;
+    <span class="hljs-keyword">this</span>.name = Localisation.getContext(descr.name);
     <span class="hljs-keyword">this</span>.prefix = descr.prefix;
     <span class="hljs-keyword">this</span>.gameArea = descr.gameArea;
     <span class="hljs-keyword">this</span>.invulnerableDuration = descr.invulnerableDuration;

@@ -16,3 +16,6 @@ export function inRange(x: number, min: number, max: number) {
 export function clamp(x: number, min: number, max: number) {
   return Math.min(Math.max(x, min), max);
 }
+
+// Crée un contexte audio du navigateur
+export const audioGlobalContext = new AudioContext();

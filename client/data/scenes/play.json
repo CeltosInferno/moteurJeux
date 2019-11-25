@@ -109,7 +109,7 @@
                 }
               },
               "Player": {
-                "name": "Joueur Vert",
+                "name": "PLAYER_1",
                 "input": "Green.Input",
                 "prefix": "G",
                 "score": "GreenScore.Score",
@@ -158,7 +158,7 @@
                 }
               },
               "Player": {
-                "name": "Joueur Rouge",
+                "name": "PLAYER_2",
                 "input": "Red.Input",
                 "prefix": "R",
                 "score": "RedScore.Score",
@@ -476,9 +476,9 @@
               },
               "Countdown": {
                 "sprites": [
-                  "sprites/countdown_step1.png",
-                  "sprites/countdown_step2.png",
-                  "sprites/countdown_step3.png"
+                  "countdown_1",
+                  "countdown_2",
+                  "countdown_3"
                 ],
                 "spriteTemplate": {
                   "components": {
@@ -580,6 +580,14 @@
           "Green.Player",
           "Red.Player"
         ]
+      }
+    }
+  },
+  "Audio": {
+    "components": {
+      "Audio": {
+        "main": true,
+        "description": "audio/events.json"
       }
     }
   }

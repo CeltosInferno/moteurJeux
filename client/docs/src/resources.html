@@ -30,6 +30,11 @@
                 </a>
               
                 
+                <a class="source" href="components/audioComponent.html">
+                      src/components/audioComponent.ts
+                </a>
+              
+                
                 <a class="source" href="components/backgroundLoaderComponent.html">
                       src/components/backgroundLoaderComponent.ts
                 </a>
@@ -185,6 +190,11 @@
                 </a>
               
                 
+                <a class="source" href="localisation.html">
+                      src/localisation.ts
+                </a>
+              
+                
                 <a class="source" href="main.html">
                       src/main.ts
                 </a>
@@ -253,7 +263,10 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">interface</span> IResourceDesc {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { audioGlobalContext } <span class="hljs-keyword">from</span> <span class="hljs-string">"./utils"</span>;
+
+<span class="hljs-keyword">interface</span> IResourceDesc {
+  audio?: <span class="hljs-built_in">string</span>[];
   text?: {[mime: <span class="hljs-built_in">string</span>]: <span class="hljs-built_in">string</span>[]};
   images?: <span class="hljs-built_in">string</span>[];
 }</pre></div></div>
@@ -315,8 +328,17 @@ via une <a href="http://bluebirdjs.com/docs/why-promises.html">promesse</a></p>
     });
 }
 
-<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadImageFile</span>(<span class="hljs-params">url: <span class="hljs-built_in">string</span></span>) </span>{
-  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>&lt;HTMLImageElement&gt;<span class="hljs-function">(<span class="hljs-params">(<span class="hljs-params">resolve</span>) =&gt; {
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadAudioFile</span>(<span class="hljs-params">url: <span class="hljs-built_in">string</span></span>) </span>{
+  <span class="hljs-keyword">const</span> xhr = <span class="hljs-keyword">await</span> loadAsync(url, <span class="hljs-literal">undefined</span>, <span class="hljs-string">"arraybuffer"</span>);
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>&lt;AudioBuffer&gt;<span class="hljs-function">(<span class="hljs-params">(<span class="hljs-params">resolve</span>) =&gt; {
+    audioGlobalContext.decodeAudioData(<span class="hljs-params">xhr.response, (<span class="hljs-params">audioBuffer</span>) =&gt; {
+      resolve(<span class="hljs-params">audioBuffer</span>);
+    }</span>);
+  }</span>);
+}
+
+<span class="hljs-params">async</span> <span class="hljs-params">function</span> <span class="hljs-params">loadImageFile</span>(<span class="hljs-params">url: <span class="hljs-built_in">string</span></span>) {
+  <span class="hljs-params">return</span> <span class="hljs-params">new</span> <span class="hljs-params">Promise</span>&lt;<span class="hljs-params">HTMLImageElement</span>&gt;(<span class="hljs-params">(<span class="hljs-params">resolve</span>) =&gt; {
     <span class="hljs-keyword">const</span> imgDownload = <span class="hljs-keyword">new</span> Image(<span class="hljs-params"></span>);
     imgDownload.onload = (<span class="hljs-params"></span>) =&gt; {
       resolve(<span class="hljs-params">imgDownload</span>);
@@ -329,6 +351,7 @@ via une <a href="http://bluebirdjs.com/docs/why-promises.html">promesse</a></p>
   <span class="hljs-params">public</span> <span class="hljs-params">static</span> <span class="hljs-params">async</span> <span class="hljs-params">init</span>(<span class="hljs-params">url: <span class="hljs-built_in">string</span></span>): <span class="hljs-params">Promise</span>&lt;<span class="hljs-params">void</span>&gt; {
     <span class="hljs-params">const</span> <span class="hljs-params">relPath</span> = <span class="hljs-params">url</span>.<span class="hljs-params">substr</span>(<span class="hljs-params">0, url.lastIndexOf(<span class="hljs-params">"/"</span>)</span>);
     <span class="hljs-params">const</span> <span class="hljs-params">desc</span> = <span class="hljs-params">await</span> <span class="hljs-params">loadJSON</span>&lt;<span class="hljs-params">IResourceDesc</span>&gt;(<span class="hljs-params">url</span>);
+    <span class="hljs-params">await</span> <span class="hljs-params">Resources</span>.<span class="hljs-params">loadAudio</span>(<span class="hljs-params">relPath, desc.audio || []</span>);
     <span class="hljs-params">await</span> <span class="hljs-params">Resources</span>.<span class="hljs-params">loadText</span>(<span class="hljs-params">relPath, desc.text || {}</span>);
     <span class="hljs-params">await</span> <span class="hljs-params">Resources</span>.<span class="hljs-params">loadImages</span>(<span class="hljs-params">relPath, desc.images || []</span>);
   }
@@ -338,6 +361,13 @@ via une <a href="http://bluebirdjs.com/docs/why-promises.html">promesse</a></p>
   }
 
   <span class="hljs-params">private</span> <span class="hljs-params">static</span> <span class="hljs-params">resources</span> = <span class="hljs-params">new</span> <span class="hljs-params">Map</span>&lt;<span class="hljs-params">string</span>, <span class="hljs-params">unknown</span>&gt;<span class="hljs-params">()</span>;
+
+  <span class="hljs-params">private</span> <span class="hljs-params">static</span> <span class="hljs-params">async</span> <span class="hljs-params">loadAudio</span>(<span class="hljs-params">relPath: <span class="hljs-built_in">string</span>, files: <span class="hljs-built_in">string</span>[]</span>) {
+    <span class="hljs-params">for</span> (<span class="hljs-params"><span class="hljs-keyword">const</span> file of files</span>) {
+      <span class="hljs-params">const</span> <span class="hljs-params">audioBuffer</span> = <span class="hljs-params">await</span> <span class="hljs-params">loadAudioFile</span>(<span class="hljs-params">`${relPath}/${file}`</span>);
+      <span class="hljs-params">Resources</span>.<span class="hljs-params">resources</span>.<span class="hljs-params">set</span>(<span class="hljs-params">file, audioBuffer</span>);
+    }
+  }
 
   <span class="hljs-params">private</span> <span class="hljs-params">static</span> <span class="hljs-params">async</span> <span class="hljs-params">loadText</span>(<span class="hljs-params">relPath: <span class="hljs-built_in">string</span>, files: {[mime: <span class="hljs-built_in">string</span>]: <span class="hljs-built_in">string</span>[]}</span>) {
     <span class="hljs-params">for</span> (<span class="hljs-params"><span class="hljs-keyword">const</span> mime <span class="hljs-keyword">in</span> files</span>) {

@@ -1,8 +1,10 @@
 import { IEntity } from "../entity";
 import { EventTrigger } from "../eventTrigger";
+import { Localisation } from "../localisation";
 import { IEntityDesc, Scene } from "../scene";
 import { ILogicComponent } from "../systems/logicSystem";
 import { Timing } from "../timing";
+import { AudioComponent } from "./audioComponent";
 import { Component } from "./component";
 
 // # Classe *CountdownComponent*
@@ -31,7 +33,10 @@ export class CountdownComponent extends Component<ICountdownComponentDesc> imple
   // Cette méthode est appelée pour configurer le composant avant
   // que tous les composants d'un objet aient été créés.
   public create(descr: ICountdownComponentDesc) {
-    this.sprites = descr.sprites;
+    this.sprites = [];
+    for (const s of descr.sprites) {
+      this.sprites.push(Localisation.get(s));
+    }
     this.delay = descr.delay;
     this.spriteTemplate = descr.spriteTemplate;
   }
@@ -73,6 +78,8 @@ export class CountdownComponent extends Component<ICountdownComponentDesc> imple
   private showImage() {
     this.shownTime = (new Date()).getTime();
     this.showNamedImage(this.sprites[this.index]);
+    // # Joue le son de décompte audio
+    AudioComponent.play("countdown");
   }
 
   // ## Méthode *showNamedImage*

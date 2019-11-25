@@ -30,6 +30,11 @@
                 </a>
               
                 
+                <a class="source" href="components/audioComponent.html">
+                      src/components/audioComponent.ts
+                </a>
+              
+                
                 <a class="source" href="components/backgroundLoaderComponent.html">
                       src/components/backgroundLoaderComponent.ts
                 </a>
@@ -185,6 +190,11 @@
                 </a>
               
                 
+                <a class="source" href="localisation.html">
+                      src/localisation.ts
+                </a>
+              
+                
                 <a class="source" href="main.html">
                       src/main.ts
                 </a>
@@ -253,8 +263,21 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { IConfig, run } <span class="hljs-keyword">from</span> <span class="hljs-string">"./main"</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { ILocaleFiles, Localisation } <span class="hljs-keyword">from</span> <span class="hljs-string">"./localisation"</span>;
+<span class="hljs-keyword">import</span> { IConfig, run } <span class="hljs-keyword">from</span> <span class="hljs-string">"./main"</span>;
 <span class="hljs-keyword">import</span> { Resources } <span class="hljs-keyword">from</span> <span class="hljs-string">"./resources"</span>;
+
+<span class="hljs-keyword">const</span> locales: ILocaleFiles = {
+  en: <span class="hljs-string">"locales/en.json"</span>,
+  fr: <span class="hljs-string">"locales/fr.json"</span>,
+};
+
+<span class="hljs-keyword">type</span> IStartFn = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-built_in">void</span>;
+<span class="hljs-keyword">let</span> startFn: IStartFn;
+
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">start</span>(<span class="hljs-params"></span>) </span>{
+  startFn();
+}
 
 <span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">preload</span>(<span class="hljs-params"></span>) </span>{
   <span class="hljs-keyword">return</span> Resources.init(<span class="hljs-string">"data/resources.json"</span>);
@@ -267,12 +290,38 @@
     alert(<span class="hljs-string">"N'oubliez pas d'inscrire les membres de votre équipe dans le fichier client/data/equipe.txt!"</span>);
   }
 
-  <span class="hljs-keyword">const</span> config: IConfig = {
-    canvasId: <span class="hljs-string">"canvas"</span>,
-    launchScene: <span class="hljs-string">"scenes/play.json"</span>,
-  };
+  Localisation.init(locales);
+  <span class="hljs-keyword">const</span> localized = <span class="hljs-built_in">document</span>.getElementsByClassName(<span class="hljs-string">"localized"</span>) <span class="hljs-keyword">as</span> HTMLCollectionOf&lt;HTMLElement&gt;;
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> item of localized) {
+    item.innerText = Localisation.get(item.innerText);
+  }
+  <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"body"</span>)!.style.display = <span class="hljs-string">"initial"</span>;
 
-  <span class="hljs-keyword">return</span> run(config);
+  startFn = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> alias1 = (<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"player1_alias"</span>) <span class="hljs-keyword">as</span> HTMLInputElement)!.value.trim();
+    <span class="hljs-keyword">const</span> alias2 = (<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"player2_alias"</span>) <span class="hljs-keyword">as</span> HTMLInputElement)!.value.trim();
+
+    <span class="hljs-keyword">if</span> (alias1.length === <span class="hljs-number">0</span>) {
+      <span class="hljs-keyword">return</span> alert(Localisation.get(<span class="hljs-string">"EMPTY_ALIAS"</span>, { ID: <span class="hljs-string">"1"</span> }));
+    }
+    <span class="hljs-keyword">if</span> (alias2.length === <span class="hljs-number">0</span>) {
+      <span class="hljs-keyword">return</span> alert(Localisation.get(<span class="hljs-string">"EMPTY_ALIAS"</span>, { ID: <span class="hljs-string">"2"</span> }));
+    }
+
+    <span class="hljs-keyword">const</span> config: IConfig = {
+      alias: [alias1, alias2],
+      canvasId: <span class="hljs-string">"canvas"</span>,
+      launchScene: <span class="hljs-string">"scenes/play.json"</span>,
+    };
+
+    Localisation.setContext(<span class="hljs-string">"PLAYER_1"</span>, alias1);
+    Localisation.setContext(<span class="hljs-string">"PLAYER_2"</span>, alias2);
+
+    <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"config"</span>)!.style.display = <span class="hljs-string">"none"</span>;
+    <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"canvas"</span>)!.style.display = <span class="hljs-string">"block"</span>;
+
+    <span class="hljs-keyword">return</span> run(config);
+  };
 }</pre></div></div>
             
         </li>

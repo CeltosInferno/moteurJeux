@@ -1,3 +1,4 @@
+import { AudioComponent } from "./components/audioComponent";
 import { BackgroundLoaderComponent } from "./components/backgroundLoaderComponent";
 import { CameraComponent } from "./components/cameraComponent";
 import { ChickenComponent } from "./components/chickenComponent";
@@ -37,6 +38,7 @@ export class ComponentFactory {
   // tels qu'utilisés dans le fichier JSON et les classes de
   // composants correspondants.
   public static componentCreators: IComponentCreators = {
+    Audio: AudioComponent,
     BackgroundLoader: BackgroundLoaderComponent,
     Camera: CameraComponent,
     Chicken: ChickenComponent,

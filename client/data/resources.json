@@ -1,9 +1,24 @@
 {
+  "audio": [
+    "audio/countdown.wav",
+    "audio/cucco_hit.wav",
+    "audio/cucco_idle.wav",
+    "audio/end_jingle.wav",
+    "audio/heart_drop.wav",
+    "audio/heart_pickup.wav",
+    "audio/player_hit.wav",
+    "audio/rupee_drop.wav",
+    "audio/rupee_pickup.wav",
+    "audio/sword_swing.wav"
+  ],
   "text": {
     "text/plain": [
       "equipe.txt",
+      "audio/events.json",
       "layers/background.txt",
       "layers/playground.txt",
+      "locales/en.json",
+      "locales/fr.json",
       "scenes/play.json",
       "spritesheets/zeldaSprites.json"
     ],
@@ -19,9 +34,12 @@
     ]
   },
   "images": [
-    "sprites/countdown_step1.png",
-    "sprites/countdown_step2.png",
-    "sprites/countdown_step3.png",
+    "sprites/countdown_step1_en.png",
+    "sprites/countdown_step1_fr.png",
+    "sprites/countdown_step2_en.png",
+    "sprites/countdown_step2_fr.png",
+    "sprites/countdown_step3_en.png",
+    "sprites/countdown_step3_fr.png",
     "sprites/deformation.png",
     "sprites/intensity.png",
     "spritesheets/zeldaSprites.png"

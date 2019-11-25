@@ -1,5 +1,6 @@
 import { vec3 } from "gl-matrix";
 import { EventTrigger } from "../eventTrigger";
+import { Localisation } from "../localisation";
 import { ILogicComponent } from "../systems/logicSystem";
 import { Timing } from "../timing";
 import { ChickenComponent } from "./chickenComponent";
@@ -61,7 +62,7 @@ export class PlayerComponent extends Component<IPlayerComponentDesc> implements 
   // Cette méthode est appelée pour configurer le composant avant
   // que tous les composants d'un objet aient été créés.
   public create(descr: IPlayerComponentDesc) {
-    this.name = descr.name;
+    this.name = Localisation.getContext(descr.name);
     this.prefix = descr.prefix;
     this.gameArea = descr.gameArea;
     this.invulnerableDuration = descr.invulnerableDuration;

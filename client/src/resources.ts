@@ -1,4 +1,7 @@
+import { audioGlobalContext } from "./utils";
+
 interface IResourceDesc {
+  audio?: string[];
   text?: {[mime: string]: string[]};
   images?: string[];
 }
@@ -34,6 +37,15 @@ async function loadJSON<T>(url: string) {
     });
 }
 
+async function loadAudioFile(url: string) {
+  const xhr = await loadAsync(url, undefined, "arraybuffer");
+  return new Promise<AudioBuffer>((resolve) => {
+    audioGlobalContext.decodeAudioData(xhr.response, (audioBuffer) => {
+      resolve(audioBuffer);
+    });
+  });
+}
+
 async function loadImageFile(url: string) {
   return new Promise<HTMLImageElement>((resolve) => {
     const imgDownload = new Image();
@@ -48,6 +60,7 @@ export class Resources {
   public static async init(url: string): Promise<void> {
     const relPath = url.substr(0, url.lastIndexOf("/"));
     const desc = await loadJSON<IResourceDesc>(url);
+    await Resources.loadAudio(relPath, desc.audio || []);
     await Resources.loadText(relPath, desc.text || {});
     await Resources.loadImages(relPath, desc.images || []);
   }
@@ -57,6 +70,13 @@ export class Resources {
   }
 
   private static resources = new Map<string, unknown>();
+
+  private static async loadAudio(relPath: string, files: string[]) {
+    for (const file of files) {
+      const audioBuffer = await loadAudioFile(`${relPath}/${file}`);
+      Resources.resources.set(file, audioBuffer);
+    }
+  }
 
   private static async loadText(relPath: string, files: {[mime: string]: string[]}) {
     for (const mime in files) {
