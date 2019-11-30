@@ -29,6 +29,7 @@ export class ChickenComponent extends Component<IChickenComponentDesc> implement
   private heartTemplate!: IEntityDesc;
   private rupeeTemplate!: IEntityDesc;
   private velocity!: vec3;
+  private hasCotCot = false;
 
   // ## Méthode *create*
   // Cette méthode est appelée pour configurer le composant avant
@@ -52,19 +53,7 @@ export class ChickenComponent extends Component<IChickenComponentDesc> implement
     vec3.scale(this.velocity, this.velocity, Math.random() * 45 + 30);
     const sprite = this.owner.getComponent<SpriteComponent>("Sprite");
     const dir = (this.velocity[0] > 0) ? "R" : "L";
-    sprite.spriteName = `C${dir}`;
-
-    //On attend un temps random entre 2000ms et 5000ms avant de déclencher le son de poulet
-    async function waitRandom() {
-      let min = 2000;
-      let max = 5000;
-      let randomTime = Math.floor(Math.random() * (max - min + 1) + min);
-      setTimeout(() => {}, randomTime);
-    }
-    let promise = waitRandom();
-    /*while(this.dropped == false){*/
-      promise.then(result => AudioComponent.play("chicken_idle"));
-    
+    sprite.spriteName = `C${dir}`;    
   
   }
 
@@ -88,6 +77,20 @@ export class ChickenComponent extends Component<IChickenComponentDesc> implement
     if (this.distance > 500) {
       this.owner.parent!.removeChild(this.owner);
     }
+
+
+    //Setting the timer to allow the chicken to make a beautiful sound called "Cotcot" by French people
+    var _this = this;
+    let min = 2000;
+    let max = 5000;
+
+    if(!this.hasCotCot){
+      this.hasCotCot = true;
+      let randomTime = Math.floor(Math.random() * (max - min + 1) + min);
+      setTimeout(function(){
+        AudioComponent.play("chicken_idle"); _this.hasCotCot = false;}
+        , randomTime);
+      }
   }
 
   // ## Méthode *onAttack*
