@@ -77,10 +77,20 @@ export class Localisation {
     }
 
     // ***TODO***: Implémenter la substitution de clés
-    
-    console.log("queryContext: ", queryContext);
-
-    return localeStrings[key];
+    var allDone =false;
+    var str = localeStrings[key]
+    while(!allDone){
+      let index1 = str.indexOf("{");
+      let index2 = str.indexOf("}");
+      if(index1 != -1){
+        let toReplace = str.substring(index1+1, index2);
+        str = str.replace("{"+toReplace+"}",queryContext[toReplace]);
+      }
+      else{
+        allDone=true;
+      }
+    }
+    return str;
   }
 
   // ## Méthode statique *setContext*
