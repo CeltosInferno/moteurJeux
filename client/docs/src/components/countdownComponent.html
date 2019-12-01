@@ -110,6 +110,26 @@
                 </a>
               
                 
+                <a class="source" href="networkInputComponent.html">
+                      src/components/networkInputComponent.ts
+                </a>
+              
+                
+                <a class="source" href="networkLeaderboardComponent.html">
+                      src/components/networkLeaderboardComponent.ts
+                </a>
+              
+                
+                <a class="source" href="networkPlayerManagerComponent.html">
+                      src/components/networkPlayerManagerComponent.ts
+                </a>
+              
+                
+                <a class="source" href="networkingComponent.html">
+                      src/components/networkingComponent.ts
+                </a>
+              
+                
                 <a class="source" href="playerComponent.html">
                       src/components/playerComponent.ts
                 </a>
@@ -210,6 +230,11 @@
                 </a>
               
                 
+                <a class="source" href="../serializer.html">
+                      src/serializer.ts
+                </a>
+              
+                
                 <a class="source" href="../systems/displaySystem.html">
                       src/systems/displaySystem.ts
                 </a>
@@ -264,7 +289,8 @@
 <span class="hljs-keyword">import</span> { ILogicComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">"../systems/logicSystem"</span>;
 <span class="hljs-keyword">import</span> { Timing } <span class="hljs-keyword">from</span> <span class="hljs-string">"../timing"</span>;
 <span class="hljs-keyword">import</span> { AudioComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">"./audioComponent"</span>;
-<span class="hljs-keyword">import</span> { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">"./component"</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">"./component"</span>;
+<span class="hljs-keyword">import</span> { IPlayerManagerComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">"./networkPlayerManagerComponent"</span>;</pre></div></div>
             
         </li>
         
@@ -294,6 +320,8 @@ lorsqu’il a terminé.</p>
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> CountdownComponent <span class="hljs-keyword">extends</span> Component&lt;ICountdownComponentDesc&gt; <span class="hljs-keyword">implements</span> ILogicComponent {
   <span class="hljs-keyword">private</span> handler = <span class="hljs-keyword">new</span> EventTrigger();
   <span class="hljs-keyword">private</span> sprites: <span class="hljs-built_in">string</span>[] = [];
+  <span class="hljs-keyword">private</span> waitSprite!: <span class="hljs-built_in">string</span>;
+  <span class="hljs-keyword">private</span> playerSpritePrefix!: <span class="hljs-built_in">string</span>;
   <span class="hljs-keyword">private</span> delay!: <span class="hljs-built_in">number</span>;
   <span class="hljs-keyword">private</span> spriteTemplate!: IEntityDesc;
   <span class="hljs-keyword">private</span> index = <span class="hljs-number">-1</span>;
@@ -320,6 +348,8 @@ que tous les composants d’un objet aient été créés.</p>
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> s of descr.sprites) {
       <span class="hljs-keyword">this</span>.sprites.push(Localisation.get(s));
     }
+    <span class="hljs-keyword">this</span>.waitSprite = Localisation.get(descr.waitSprite);
+    <span class="hljs-keyword">this</span>.playerSpritePrefix = descr.playerSpritePrefix;
     <span class="hljs-keyword">this</span>.delay = descr.delay;
     <span class="hljs-keyword">this</span>.spriteTemplate = descr.spriteTemplate;
   }</pre></div></div>
@@ -335,7 +365,9 @@ que tous les composants d’un objet aient été créés.</p>
               </div>
               <h2 id="m-thode-setup-">Méthode <em>setup</em></h2>
 <p>Cette méthode est appelée pour configurer le composant après
-que tous les composants d’un objet aient été créés.</p>
+que tous les composants d’un objet aient été créés. Si on
+doit attendre après le réseau, on affiche un message à cette
+fin et on désactive le composant pendant ce temps.</p>
 
             </div>
             
@@ -343,6 +375,13 @@ que tous les composants d’un objet aient été créés.</p>
     <span class="hljs-keyword">if</span> (descr.handler) {
       <span class="hljs-keyword">const</span> tokens = descr.handler.split(<span class="hljs-string">"."</span>);
       <span class="hljs-keyword">this</span>.handler.add(<span class="hljs-keyword">this</span>.owner.getComponent(tokens[<span class="hljs-number">0</span>]), tokens[<span class="hljs-number">1</span>]);
+    }
+
+    <span class="hljs-keyword">if</span> (descr.playerWait) {
+      <span class="hljs-keyword">const</span> comp = Component.findComponent&lt;IPlayerManagerComponent&gt;(descr.playerWait)!;
+      <span class="hljs-keyword">this</span>.showNamedImage(<span class="hljs-keyword">this</span>.waitSprite);
+      <span class="hljs-keyword">this</span>.enabled = <span class="hljs-literal">false</span>;
+      comp.readyEvent.add(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>.onPlayerReady);
     }
   }</pre></div></div>
             
@@ -388,6 +427,28 @@ désiré, et on change d’image si c’est le cas.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
+              <h2 id="m-thode-onplayerready-">Méthode <em>onPlayerReady</em></h2>
+<p>Cette méthode est appelée quand on a trouvé un joueur avec qui
+faire une partie. On affiche alors à l’écran un message nous
+identifiant.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">private</span> onPlayerReady(localIndex: <span class="hljs-built_in">number</span>) {
+    <span class="hljs-keyword">const</span> sprite = Localisation.get(<span class="hljs-keyword">this</span>.playerSpritePrefix + localIndex);
+    <span class="hljs-keyword">this</span>.sprites.unshift(sprite);
+    <span class="hljs-keyword">this</span>.enabled = <span class="hljs-literal">true</span>;
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
               <h2 id="m-thode-showimage-">Méthode <em>showImage</em></h2>
 <p>Affiche une image parmi les sprites désirées, si il y en
 a encore à afficher.</p>
@@ -401,11 +462,11 @@ a encore à afficher.</p>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <h1 id="joue-le-son-de-d-compte-audio">Joue le son de décompte audio</h1>
 
@@ -417,11 +478,11 @@ a encore à afficher.</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <h2 id="m-thode-shownamedimage-">Méthode <em>showNamedImage</em></h2>
 <p>Affiche une image, directement à partir de son nom</p>

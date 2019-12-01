@@ -6,6 +6,7 @@ import { ILogicComponent } from "../systems/logicSystem";
 import { Timing } from "../timing";
 import { AudioComponent } from "./audioComponent";
 import { Component } from "./component";
+import { IPlayerManagerComponent } from "./networkPlayerManagerComponent";
 
 // # Classe *CountdownComponent*
 // Ce composant affiche un décompte et envoie un événement
@@ -23,6 +24,8 @@ interface ICountdownComponentDesc {
 export class CountdownComponent extends Component<ICountdownComponentDesc> implements ILogicComponent {
   private handler = new EventTrigger();
   private sprites: string[] = [];
+  private waitSprite!: string;
+  private playerSpritePrefix!: string;
   private delay!: number;
   private spriteTemplate!: IEntityDesc;
   private index = -1;
@@ -37,17 +40,28 @@ export class CountdownComponent extends Component<ICountdownComponentDesc> imple
     for (const s of descr.sprites) {
       this.sprites.push(Localisation.get(s));
     }
+    this.waitSprite = Localisation.get(descr.waitSprite);
+    this.playerSpritePrefix = descr.playerSpritePrefix;
     this.delay = descr.delay;
     this.spriteTemplate = descr.spriteTemplate;
   }
 
   // ## Méthode *setup*
   // Cette méthode est appelée pour configurer le composant après
-  // que tous les composants d'un objet aient été créés.
+  // que tous les composants d'un objet aient été créés. Si on
+  // doit attendre après le réseau, on affiche un message à cette
+  // fin et on désactive le composant pendant ce temps.
   public setup(descr: ICountdownComponentDesc) {
     if (descr.handler) {
       const tokens = descr.handler.split(".");
       this.handler.add(this.owner.getComponent(tokens[0]), tokens[1]);
+    }
+
+    if (descr.playerWait) {
+      const comp = Component.findComponent<IPlayerManagerComponent>(descr.playerWait)!;
+      this.showNamedImage(this.waitSprite);
+      this.enabled = false;
+      comp.readyEvent.add(this, this.onPlayerReady);
     }
   }
 
@@ -70,6 +84,16 @@ export class CountdownComponent extends Component<ICountdownComponentDesc> imple
     } else {
       return this.showImage();
     }
+  }
+
+  // ## Méthode *onPlayerReady*
+  // Cette méthode est appelée quand on a trouvé un joueur avec qui
+  // faire une partie. On affiche alors à l'écran un message nous
+  // identifiant.
+  private onPlayerReady(localIndex: number) {
+    const sprite = Localisation.get(this.playerSpritePrefix + localIndex);
+    this.sprites.unshift(sprite);
+    this.enabled = true;
   }
 
   // ## Méthode *showImage*

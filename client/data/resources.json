@@ -40,6 +40,12 @@
     "sprites/countdown_step2_fr.png",
     "sprites/countdown_step3_en.png",
     "sprites/countdown_step3_fr.png",
+    "sprites/green_player_en.png",
+    "sprites/green_player_fr.png",
+    "sprites/red_player_en.png",
+    "sprites/red_player_fr.png",
+    "sprites/wait_en.png",
+    "sprites/wait_fr.png",
     "sprites/deformation.png",
     "sprites/intensity.png",
     "spritesheets/zeldaSprites.png"

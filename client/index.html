@@ -32,11 +32,8 @@
   <div id="playarea">
     <div id="instructions">
       <div>
-        <p>
-          <span class="localized">greenPlayer</span>
-        </p>
         <div>
-          <span class="localized">CHAR_KEYS</span> -
+          <span class="localized">ARROW_KEYS</span> -
           <span class="localized">MOVE</span>
         </div>
         <div>
@@ -44,43 +41,34 @@
           <span class="localized">ATTACK</span>
         </div>
       </div>
-      <div>
-        <p>
-          <span class="localized">redPlayer</span>
-        </p>
-        <div>
-          <span class="localized">ARROW_KEYS</span> -
-          <span class="localized">MOVE</span>
-        </div>
-        <div>
-          <span class="localized">ENTER_KEY</span> -
-          <span class="localized">ATTACK</span>
-        </div>
-      </div>
     </div>
     <div id="config">
       <p>
-        <span class="localized">ALIAS</span>(
-        <span class="localized">greenPlayer</span>):
-        <input id="player1_alias" value="Anonyme1" />
+        <span class="localized">ALIAS</span>:
+        <input id="player_alias" value="Anonyme" />
       </p>
       <p>
-        <span class="localized">ALIAS</span>(
-        <span class="localized">redPlayer</span>):
-        <input id="player2_alias" value="Anonyme2" />
+        <span class="localized">SERVER</span>:
+        <input id="server" value="localhost:8080" />
       </p>
       <p>
         <button class="localized" onclick="start();">PLAY</button>
       </p>
     </div>
     <canvas id="canvas" width="768" height="576" style="display:none"></canvas>
+    <div id="leaderboard">
+      <div id="leaderboardTemplate" class="template">
+        <span class="name"></span> -
+        <span class="score"></span>
+      </div>
+    </div>
   </div>
 
   <script>
     let requestFullScreen;
     let start;
 
-    require(["chickendodge", "graphicsAPI"], (game, GraphicsAPI) => {
+    require(["client/src/chickendodge", "client/src/graphicsAPI"], (game, GraphicsAPI) => {
       requestFullScreen = GraphicsAPI.requestFullScreen;
       start = game.start;
       game.preload()

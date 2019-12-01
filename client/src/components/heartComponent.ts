@@ -1,8 +1,6 @@
 import { ILogicComponent } from "../systems/logicSystem";
 import { Timing } from "../timing";
 import { Component } from "./component";
-import { AudioComponent } from "./audioComponent";
-
 
 // # Classe *HeartComponent*
 // Cette classe comprend les informations d'un coeur à ramasser.
@@ -29,7 +27,6 @@ export class HeartComponent extends Component<IHeartComponentDesc> implements IL
   // que tous les composants d'un objet aient été créés.
   public setup() {
     this.start = (new Date()).getTime();
-    AudioComponent.play("heart_drop");
   }
 
   // ## Méthode *update*

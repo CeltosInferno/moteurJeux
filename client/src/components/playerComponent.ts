@@ -3,7 +3,6 @@ import { EventTrigger } from "../eventTrigger";
 import { Localisation } from "../localisation";
 import { ILogicComponent } from "../systems/logicSystem";
 import { Timing } from "../timing";
-import { AudioComponent } from "./audioComponent";
 import { ChickenComponent } from "./chickenComponent";
 import { ColliderComponent, ICollisionComponent } from "./colliderComponent";
 import { Component } from "./component";
@@ -44,6 +43,7 @@ export class PlayerComponent extends Component<IPlayerComponentDesc> implements 
   public isDead = false;
   public score!: ScoreComponent;
   public name!: string;
+  public isLocal = true;
 
   private prefix!: string;
   private gameArea!: IArea;
@@ -85,7 +85,9 @@ export class PlayerComponent extends Component<IPlayerComponentDesc> implements 
     for (const item of descr.onHurtEnable) {
       const component = Component.findComponent(item)!;
       this.life.hurtEvent.add(this, () => {
-        component.enabled = true;
+        if (this.isLocal) {
+          component.enabled = true;
+        }
       });
     }
 
@@ -136,13 +138,11 @@ export class PlayerComponent extends Component<IPlayerComponentDesc> implements 
     const chicken = obj.getComponent<ChickenComponent>("Chicken");
 
     if (rupee) {
-      AudioComponent.play("rupee_pickup")
       this.score.value += rupee.value;
       obj.active = false;
       obj.parent!.removeChild(obj);
     }
     if (heart) {
-      AudioComponent.play("heart_pickup")
       this.life.value += heart.heal;
       obj.active = false;
       obj.parent!.removeChild(obj);
@@ -167,7 +167,6 @@ export class PlayerComponent extends Component<IPlayerComponentDesc> implements 
   // Déclenchée lorsque le joueur est blessé
   private onHurt() {
     const collider = this.owner.getComponent<ColliderComponent>("Collider")!;
-    AudioComponent.play("player_hit");
 
     this.isHurt = true;
     setTimeout(() => {
@@ -227,7 +226,6 @@ export class PlayerComponent extends Component<IPlayerComponentDesc> implements 
   // Met à jour le mouvement normal du joueur
   private updateStandard() {
     if (!this.isAttacking && this.input.getKey("attack")) {
-      AudioComponent.play("attack");
       this.isAttacking = true;
       this.sprite.animationFrame = 1;
       this.sprite.frameSkip = 1;

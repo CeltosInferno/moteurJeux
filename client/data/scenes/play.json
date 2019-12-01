@@ -99,18 +99,9 @@
                 "y": 70,
                 "z": 0
               },
-              "Input": {
-                "symbols": {
-                  "up": "KeyW",
-                  "down": "KeyS",
-                  "left": "KeyA",
-                  "right": "KeyD",
-                  "attack": "Space"
-                }
-              },
               "Player": {
                 "name": "PLAYER_1",
-                "input": "Green.Input",
+                "input": "ServerP1.NetworkInput",
                 "prefix": "G",
                 "score": "GreenScore.Score",
                 "life": "GreenScore.Life",
@@ -148,18 +139,9 @@
                 "y": 70,
                 "z": 0
               },
-              "Input": {
-                "symbols": {
-                  "up": "ArrowUp",
-                  "down": "ArrowDown",
-                  "left": "ArrowLeft",
-                  "right": "ArrowRight",
-                  "attack": "Enter"
-                }
-              },
               "Player": {
                 "name": "PLAYER_2",
-                "input": "Red.Input",
+                "input": "ServerP2.NetworkInput",
                 "prefix": "R",
                 "score": "RedScore.Score",
                 "life": "RedScore.Life",
@@ -480,6 +462,8 @@
                   "countdown_2",
                   "countdown_3"
                 ],
+                "waitSprite": "wait",
+                "playerSpritePrefix": "player",
                 "spriteTemplate": {
                   "components": {
                     "Position": {},
@@ -491,7 +475,8 @@
                   }
                 },
                 "delay": 1000,
-                "handler": "Enabler.onEvent"
+                "handler": "Enabler.onEvent",
+                "playerWait": "Server.NetworkPlayerManager"
               },
               "Enabler": {
                 "onStart": {
@@ -588,6 +573,63 @@
       "Audio": {
         "main": true,
         "description": "audio/events.json"
+      }
+    }
+  },
+  "Server": {
+    "components": {
+      "Networking": {},
+      "NetworkPlayerManager": {
+        "networking": "Server.Networking",
+        "players": [{
+            "player": "Green.Player",
+            "input": "ServerP1.NetworkInput"
+          },
+          {
+            "player": "Red.Player",
+            "input": "ServerP2.NetworkInput"
+          }
+        ]
+      }
+    },
+    "children": {
+      "ServerP1": {
+        "components": {
+          "NetworkInput": {
+            "networking": "Server.Networking",
+            "localInput": "ServerInput.Input"
+          }
+        }
+      },
+      "ServerP2": {
+        "components": {
+          "NetworkInput": {
+            "networking": "Server.Networking",
+            "localInput": "ServerInput.Input"
+          }
+        }
+      },
+      "ServerInput": {
+        "components": {
+          "Input": {
+            "symbols": {
+              "up": "ArrowUp",
+              "down": "ArrowDown",
+              "left": "ArrowLeft",
+              "right": "ArrowRight",
+              "attack": "Space"
+            }
+          }
+        }
+      }
+    }
+  },
+  "Leaderboard": {
+    "components": {
+      "NetworkLeaderboard": {
+        "networking": "Server.Networking",
+        "field": "leaderboard",
+        "template": "leaderboardTemplate"
       }
     }
   }

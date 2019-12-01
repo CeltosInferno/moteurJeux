@@ -13,6 +13,10 @@ import { HeartComponent } from "./components/heartComponent";
 import { InputComponent } from "./components/inputComponent";
 import { LayerComponent } from "./components/layerComponent";
 import { LifeComponent } from "./components/lifeComponent";
+import { NetworkingComponent } from "./components/networkingComponent";
+import { NetworkInputComponent } from "./components/networkInputComponent";
+import { NetworkLeaderboardComponent } from "./components/networkLeaderboardComponent";
+import { NetworkPlayerManagerComponent } from "./components/networkPlayerManagerComponent";
 import { PlayerComponent } from "./components/playerComponent";
 import { PositionComponent } from "./components/positionComponent";
 import { RawSpriteComponent } from "./components/rawSpriteComponent";
@@ -52,6 +56,10 @@ export class ComponentFactory {
     Input: InputComponent,
     Layer: LayerComponent,
     Life: LifeComponent,
+    NetworkInput: NetworkInputComponent,
+    NetworkLeaderboard: NetworkLeaderboardComponent,
+    NetworkPlayerManager: NetworkPlayerManagerComponent,
+    Networking: NetworkingComponent,
     Player: PlayerComponent,
     Position: PositionComponent,
     RawSprite: RawSpriteComponent,

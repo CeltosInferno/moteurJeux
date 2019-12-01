@@ -110,6 +110,26 @@
                 </a>
               
                 
+                <a class="source" href="networkInputComponent.html">
+                      src/components/networkInputComponent.ts
+                </a>
+              
+                
+                <a class="source" href="networkLeaderboardComponent.html">
+                      src/components/networkLeaderboardComponent.ts
+                </a>
+              
+                
+                <a class="source" href="networkPlayerManagerComponent.html">
+                      src/components/networkPlayerManagerComponent.ts
+                </a>
+              
+                
+                <a class="source" href="networkingComponent.html">
+                      src/components/networkingComponent.ts
+                </a>
+              
+                
                 <a class="source" href="playerComponent.html">
                       src/components/playerComponent.ts
                 </a>
@@ -207,6 +227,11 @@
                 
                 <a class="source" href="../scene.html">
                       src/scene.ts
+                </a>
+              
+                
+                <a class="source" href="../serializer.html">
+                      src/serializer.ts
                 </a>
               
                 
@@ -314,6 +339,7 @@
   <span class="hljs-keyword">public</span> isDead = <span class="hljs-literal">false</span>;
   <span class="hljs-keyword">public</span> score!: ScoreComponent;
   <span class="hljs-keyword">public</span> name!: <span class="hljs-built_in">string</span>;
+  <span class="hljs-keyword">public</span> isLocal = <span class="hljs-literal">true</span>;
 
   <span class="hljs-keyword">private</span> prefix!: <span class="hljs-built_in">string</span>;
   <span class="hljs-keyword">private</span> gameArea!: IArea;
@@ -379,7 +405,9 @@ l’animation d’attaque est terminée.</p>
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> item of descr.onHurtEnable) {
       <span class="hljs-keyword">const</span> component = Component.findComponent(item)!;
       <span class="hljs-keyword">this</span>.life.hurtEvent.add(<span class="hljs-keyword">this</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-        component.enabled = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.isLocal) {
+          component.enabled = <span class="hljs-literal">true</span>;
+        }
       });
     }
 

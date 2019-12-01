@@ -2,7 +2,6 @@ import { vec3 } from "gl-matrix";
 import { IEntityDesc, Scene } from "../scene";
 import { ILogicComponent } from "../systems/logicSystem";
 import { Timing } from "../timing";
-import { AudioComponent } from "./audioComponent";
 import { ColliderComponent } from "./colliderComponent";
 import { Component } from "./component";
 import { PositionComponent } from "./positionComponent";
@@ -29,7 +28,6 @@ export class ChickenComponent extends Component<IChickenComponentDesc> implement
   private heartTemplate!: IEntityDesc;
   private rupeeTemplate!: IEntityDesc;
   private velocity!: vec3;
-  private hasCotCot = false;
 
   // ## Méthode *create*
   // Cette méthode est appelée pour configurer le composant avant
@@ -53,8 +51,7 @@ export class ChickenComponent extends Component<IChickenComponentDesc> implement
     vec3.scale(this.velocity, this.velocity, Math.random() * 45 + 30);
     const sprite = this.owner.getComponent<SpriteComponent>("Sprite");
     const dir = (this.velocity[0] > 0) ? "R" : "L";
-    sprite.spriteName = `C${dir}`;    
-  
+    sprite.spriteName = `C${dir}`;
   }
 
   // ## Méthode *update*
@@ -77,30 +74,13 @@ export class ChickenComponent extends Component<IChickenComponentDesc> implement
     if (this.distance > 500) {
       this.owner.parent!.removeChild(this.owner);
     }
-
-
-    //Setting the timer to allow the chicken to make a beautiful sound called "Cotcot" by French people
-    var _this = this;
-    let min = 2000;
-    let max = 5000;
-
-    if(!this.hasCotCot){
-      this.hasCotCot = true;
-      let randomTime = Math.floor(Math.random() * (max - min + 1) + min);
-      setTimeout(function(){
-        AudioComponent.play("chicken_idle"); _this.hasCotCot = false;}
-        , randomTime);
-      }
   }
 
   // ## Méthode *onAttack*
   // Cette méthode est appelée quand le poulet se fait attaquer
   public onAttack() {
-    
-    AudioComponent.play("chicken_hit");
     const toDrop = (Math.random() < this.heartAttackChance) ? this.heartTemplate : this.rupeeTemplate;
     this.drop(toDrop, dropId++);
-    
 
     const collider = this.owner.getComponent<ColliderComponent>("Collider");
     collider.enabled = false;

@@ -33,24 +33,24 @@ export function init() {
   document.getElementById("body")!.style.display = "initial";
 
   startFn = () => {
-    const alias1 = (document.getElementById("player1_alias") as HTMLInputElement)!.value.trim();
-    const alias2 = (document.getElementById("player2_alias") as HTMLInputElement)!.value.trim();
+    const alias = (document.getElementById("player_alias") as HTMLInputElement)!.value.trim();
+    const server = (document.getElementById("server") as HTMLInputElement)!.value.trim();
 
-    if (alias1.length === 0) {
-      return alert(Localisation.get("EMPTY_ALIAS", { ID: "1" }));
+    if (alias.length === 0) {
+      return alert(Localisation.get("EMPTY_ALIAS"));
     }
-    if (alias2.length === 0) {
-      return alert(Localisation.get("EMPTY_ALIAS", { ID: "2" }));
+    if (server.length === 0) {
+      return alert(Localisation.get("EMPTY_SERVER"));
     }
 
     const config: IConfig = {
-      alias: [alias1, alias2],
+      alias,
       canvasId: "canvas",
       launchScene: "scenes/play.json",
+      server,
     };
 
-    Localisation.setContext("PLAYER_1", alias1);
-    Localisation.setContext("PLAYER_2", alias2);
+    Localisation.setContext("PLAYER_1", alias);
 
     document.getElementById("config")!.style.display = "none";
     document.getElementById("canvas")!.style.display = "block";

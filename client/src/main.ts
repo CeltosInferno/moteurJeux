@@ -9,7 +9,8 @@ import { clamp } from "./utils";
 export interface IConfig {
   canvasId: string;
   launchScene: string;
-  alias: string[];
+  alias: string;
+  server: string;
 }
 
 export let GlobalConfig: IConfig;
